@@ -1,0 +1,38 @@
+name: ShopAssist AI CI
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run automated tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run pytest
+        run: python -m pytest -v
+
+      - name: Build production Docker image
+        run: docker build --target runtime -t shopassist-ai:ci .
+
+      - name: Build test Docker image
+        run: docker build --target test -t shopassist-ai:test .
+
+      - name: Run tests inside Docker
+        run: docker run --rm shopassist-ai:test
