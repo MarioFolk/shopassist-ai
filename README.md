@@ -161,6 +161,7 @@ shopassist-ai/
 - API responds successfully in Docker
 - Container runs as a non-root user
 - Docker health check reports healthy
+- GitHub Actions CI checks passed for the Docker and test setup
 
 ## Limitations
 
